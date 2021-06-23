@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ServiceConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SystemDefault
+    botId="1867743063:AAEHijcumgSzr5OAfUZWrDdG5lGzzl2xEe8"
+    chatId="386603692"
+    daysOldDeliteLogs="0"
+    waitForAnswerSec="20"
+    sendMessageBeforeDisconnectSec="10"
+    disconnectIfNoAnswer="True"
+    notDisconnectIP="console"
+    systemInfoOnStartFields="OS Name;System Boot Time;Total Physical Memory;Available Physical Memory;Domain;Logon Server"
+    systemInfoOnEventFields="OS Name;System Boot Time;Total Physical Memory;Available Physical Memory;Domain;Logon Server"
+    LOGON_TIME_fieldName="LOGON TIME"
+    USERNAME_fieldName="USERNAME"
+    SESSIONNAME_fieldName="SESSIONNAME" />
+  <Users>
+    <user
+      name="leshkov"
+      chatId="909020089"
+      waitForAnswerSec="20"
+      sendMessageBeforeDisconnectSec="15"
+      disconnectIfNoAnswer="True"
+      notDisconnectIP="console;192.168.0.11" />
+    <user
+      name="ivanov.a"
+      chatId="353199290"
+      waitForAnswerSec="20"
+      sendMessageBeforeDisconnectSec="15"
+      disconnectIfNoAnswer="True" />
+    <user
+      name="user2"
+      chatId="163876364356"
+      waitForAnswerSec="0"
+      sendMessageBeforeDisconnectSec="0"
+      notDisconnectIP="" />
+  </Users>
+  <ThreIsNewChanges>false</ThreIsNewChanges>
+  <LastConfigRead>2021-05-24T11:57:09.5734031+03:00</LastConfigRead>
+</ServiceConfig>

@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A470BC84-CCD0-4E49-8A2D-BF80753DE974}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>ServiceLogonMultifactor</RootNamespace>
+    <AssemblyName>ServiceLogonMultifactor</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App\AppState.cs" />
+    <Compile Include="App\AppStateExtensions.cs" />
+    <Compile Include="App\AppWorkers.cs" />
+    <Compile Include="App\IAppWorkers.cs" />
+    <Compile Include="App\IStateAccessible.cs" />
+    <Compile Include="Configs\ApplicationConfig\LogonMultifactorConfig.cs" />
+    <Compile Include="Configs\ApplicationConfig\UserConfig.cs" />
+    <Compile Include="Configs\ApplicationConfig\UsersCollectionSection.cs" />
+    <Compile Include="Configs\IConfigWithLastReadField.cs" />
+    <Compile Include="Configs\Services\Generic\ConfigReader.cs" />
+    <Compile Include="Configs\Services\Generic\ConfigWriter.cs" />
+    <Compile Include="Configs\Services\Generic\IConfigReader.cs" />
+    <Compile Include="Configs\Services\Generic\IConfigWriter.cs" />
+    <Compile Include="Configs\Services\IUsersIpConfigManager.cs" />
+    <Compile Include="Configs\Services\UsersIpConfigManager.cs" />
+    <Compile Include="Enrichers\IEnricher.cs" />
+    <Compile Include="Enrichers\IUserSessionEventLogEnricher.cs" />
+    <Compile Include="Enrichers\UserSessionDetailsEnricher.cs" />
+    <Compile Include="Enrichers\UserSessionEnricher.cs" />
+    <Compile Include="Enrichers\UserSessionEventLogEnricher.cs" />
+    <Compile Include="Logging\Collectors\ErrorsCollector.cs" />
+    <Compile Include="Logging\Collectors\IErrorsCollector.cs" />
+    <Compile Include="Logging\Infrastructure\IOldLogsCleaner.cs" />
+    <Compile Include="Logging\Infrastructure\ITracingFoldersConfigurator.cs" />
+    <Compile Include="Logging\Infrastructure\OldLogsCleaner.cs" />
+    <Compile Include="Logging\Collectors\HealthStatisticCollector.cs" />
+    <Compile Include="Logging\Collectors\IHealthStatisticCollector.cs" />
+    <Compile Include="Logging\ITracingRender.cs" />
+    <Compile Include="Logging\Infrastructure\TracingFoldersConfigurator.cs" />
+    <Compile Include="Logging\TracingRender.cs" />
+    <Compile Include="Logging\ITracing.cs" />
+    <Compile Include="InstallerServiceLogonMultifactor.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="InstallerServiceLogonMultifactor.Designer.cs">
+      <DependentUpon>InstallerServiceLogonMultifactor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Integration\Telegram\ButtonsRequestsProcessor.cs" />
+    <Compile Include="Integration\Telegram\ButtonsRequestsReader.cs" />
+    <Compile Include="Integration\Telegram\IButtonsRequestsProcessor.cs" />
+    <Compile Include="Integration\Telegram\IButtonsRequestsReader.cs" />
+    <Compile Include="Integration\Telegram\IMonitoringRequestsProcessor.cs" />
+    <Compile Include="Integration\Telegram\IMonitoringRequestsReader.cs" />
+    <Compile Include="Integration\Telegram\IServiceConfigMessage.cs" />
+    <Compile Include="Integration\Telegram\ITelegramButtons.cs" />
+    <Compile Include="Integration\Telegram\ITelegramGetUpdates.cs" />
+    <Compile Include="Integration\Telegram\ITelegramSimpleMessage.cs" />
+    <Compile Include="Integration\Telegram\ITelegramTexts.cs" />
+    <Compile Include="Integration\Telegram\MonitoringRequestsProcessor.cs" />
+    <Compile Include="Integration\Telegram\MonitoringRequestsReader.cs" />
+    <Compile Include="Integration\Telegram\ServiceConfigMessage.cs" />
+    <Compile Include="Integration\Telegram\TelegramButtons.cs" />
+    <Compile Include="Integration\Telegram\TelegramGetUpdates.cs" />
+    <Compile Include="Integration\Telegram\TelegramSimpleMessage.cs" />
+    <Compile Include="Integration\Telegram\TelegramTexts.cs" />
+    <Compile Include="Logging\Tracing.cs" />
+    <Compile Include="LogonMultifactorService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="LogonMultifactorService.Designer.cs">
+      <DependentUpon>LogonMultifactorService.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Lookups\IQueryUserLookup.cs" />
+    <Compile Include="Lookups\ISystemInfoLookup.cs" />
+    <Compile Include="Lookups\ITaskListLookup.cs" />
+    <Compile Include="Lookups\QueryUserLookup.cs" />
+    <Compile Include="Lookups\SystemInfoLookup.cs" />
+    <Compile Include="Lookups\TaskListLookup.cs" />
+    <Compile Include="Models\TelegramModel\CallbackQuery.cs" />
+    <Compile Include="Models\TelegramModel\Chat.cs" />
+    <Compile Include="Models\TelegramModel\Entity.cs" />
+    <Compile Include="Models\TelegramModel\From.cs" />
+    <Compile Include="Models\TelegramModel\Inline_Keyboard.cs" />
+    <Compile Include="Models\TelegramModel\Message.cs" />
+    <Compile Include="Models\TelegramModel\ReplyMarkup.cs" />
+    <Compile Include="Models\TelegramModel\Result.cs" />
+    <Compile Include="Models\TelegramModel\Root.cs" />
+    <Compile Include="Models\UserSessionModel\LogonSession.cs" />
+    <Compile Include="Models\UserSessionModel\UserSessionData.cs" />
+    <Compile Include="Models\UserSessionModel\UserSessionDetails.cs" />
+    <Compile Include="Models\UserSessionModel\UserSessionTaskList.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Providers\DateTimeProvider.cs" />
+    <Compile Include="Providers\DnsHostProvider.cs" />
+    <Compile Include="Providers\FileSystemProvider.cs" />
+    <Compile Include="Providers\HttpProvider.cs" />
+    <Compile Include="Providers\IDateTimeProvider.cs" />
+    <Compile Include="Providers\IDnsHostProvider.cs" />
+    <Compile Include="Providers\IFileSystemProvider.cs" />
+    <Compile Include="Providers\IHttpProvider.cs" />
+    <Compile Include="Providers\ISleepProvider.cs" />
+    <Compile Include="Providers\IWinApiProvider.cs" />
+    <Compile Include="Providers\SleepProvider.cs" />
+    <Compile Include="Providers\TimedWebClientProxy.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Providers\WinApiProvider.cs" />
+    <Compile Include="Wrappers\ExecuteCommandWrapper.cs" />
+    <Compile Include="Wrappers\IExecuteCommandWrapper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="readme1.md" />
+    <None Include="readme.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Service.Config.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
