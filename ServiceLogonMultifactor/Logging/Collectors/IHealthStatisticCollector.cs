@@ -5,7 +5,7 @@
         void ReportOk();
         
         void ReportFailed();
-        void ReportFailed5();
+        void ReportFaileMax();
         double GetFailOkRatio(long failCo);
 
         string GetOkFailRatioAsText();

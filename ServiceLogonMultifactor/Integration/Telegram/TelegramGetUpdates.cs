@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using ServiceLogonMultifactor.App;
@@ -60,8 +61,8 @@ namespace ServiceLogonMultifactor.Integration.Telegram
             }
             catch (AggregateException e)
             {
-                HealthStatisticCollector.GetCurrent().ReportFailed5();
-                //tracing.WriteError($"error GetUpdates {string.Join(Environment.NewLine ,e.InnerExceptions.Select(s=>s.Message)) }");
+                HealthStatisticCollector.GetCurrent().ReportFaileMax();
+              //  tracing.WriteError($"error GetUpdates {string.Join(Environment.NewLine ,e.InnerExceptions.Select(s=>s.Message)) }");
             }
             catch (Exception e)
             {

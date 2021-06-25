@@ -7,7 +7,7 @@ namespace ServiceLogonMultifactor.Logging.Collectors
         private long okCount = 0;
 
         private long failedCount = 0;
-        private long failedCount5 = 0;
+        private long failedCountMax = 0;
 
         private HealthStatisticCollector()
         {
@@ -30,9 +30,9 @@ namespace ServiceLogonMultifactor.Logging.Collectors
         {
             Interlocked.Increment(ref failedCount);
         }
-        public void ReportFailed5()
+        public void ReportFaileMax()
         {
-            Interlocked.Increment(ref failedCount);
+            Interlocked.Increment(ref failedCountMax);
         }
 
         public double GetFailOkRatio(long failCo)
@@ -49,8 +49,8 @@ namespace ServiceLogonMultifactor.Logging.Collectors
         public string GetOkFailRatioAsText()
         {
            return 
-                $"Updates ok: {okCount} failed: {failedCount}({failedCount5}) " +
-                $"ratio {GetFailOkRatio(failedCount):0.0}({GetFailOkRatio(failedCount5):0.0})%";
+                $"Updates ok: {okCount} failed: {failedCount}({failedCountMax}) " +
+                $"ratio {GetFailOkRatio(failedCount):0.0}({GetFailOkRatio(failedCountMax):0.0})%";
         }
     }
 }

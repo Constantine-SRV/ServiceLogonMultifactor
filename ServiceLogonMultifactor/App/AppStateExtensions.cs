@@ -7,22 +7,22 @@ namespace ServiceLogonMultifactor.App
     {
         public static AppState GetAppState(this IStateAccessible context)
         {
-            return App.AppState.GetCurrent();
+            return AppState.GetCurrent();
         }
 
         public static LogonMultifactorConfig GetAppConfig(this IStateAccessible context)
         {
-            return App.AppState.GetCurrent().AppConfig;
+            return AppState.GetCurrent().AppConfig;
         }
 
         public static string GetLocalIp(this IStateAccessible context)
         {
-            return App.AppState.GetCurrent().LocalIP;
+            return AppState.GetCurrent().LocalIP;
         }
 
         public static DateTime GetStartTime(this IStateAccessible context)
         {
-            return App.AppState.GetCurrent().StartTime;
+            return AppState.GetCurrent().StartTime;
         }
     }
 }
