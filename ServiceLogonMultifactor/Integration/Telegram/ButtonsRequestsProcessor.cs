@@ -18,7 +18,7 @@ namespace ServiceLogonMultifactor.Integration.Telegram
         public ButtonsRequestsProcessor(ITracing tracing, IExecuteCommandWrapper executeCommandWrapper,
             ITelegramSimpleMessage telegramSimpleMessage, ITelegramTexts telegramTexts, ISystemInfoLookup systemInfoLookup)
         {
-            this.tracing = tracing;
+             this.tracing = tracing;
             this.executeCommandWrapper = executeCommandWrapper;
             this.telegramSimpleMessage = telegramSimpleMessage;
             this.telegramTexts = telegramTexts;

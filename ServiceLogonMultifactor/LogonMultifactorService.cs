@@ -23,13 +23,14 @@ namespace ServiceLogonMultifactor
         private static readonly object LockObjectCheckResponse = new object(); //для таймера
         private static readonly object LockObjectConfigAndCommand = new object(); //для таймера
         public static List<UserSessionData> ListRequest = new List<UserSessionData>();
+        private static List<int> listProcessingSessions = new List<int>(); //to prevent processing same sesion twice (logon and unlock event)
         private static int eventNumber; //events count
         private readonly IFileSystemProvider fileSystemProvider;
         private readonly IMonitoringRequestsReader answerOnMonitoringRequest;
         private readonly IEnricher<UserSessionData> userSessionEnricher;
         private readonly IExecuteCommandWrapper executeCommandWrapper;
         private readonly IUsersIpConfigManager usersIpConfigManager;
-        private readonly IWinApiProvider winApiProvider;
+        private readonly IWinApiTsProvider winApiProvider;
         private readonly ISystemInfoLookup systemInfoLookup;
         private readonly IOldLogsCleaner oldLogsCleaner;
         private readonly IAppWorkers regularTsks;
@@ -37,12 +38,15 @@ namespace ServiceLogonMultifactor
         private readonly IUserSessionEventLogEnricher userSessionEventLogEnricher;
         private readonly IQueryUserLookup iqUserLookup;
         private readonly IEnricher<UserSessionDetails> userSessionDetailsEnricher;
+        private readonly IEnricher<UserSessionDetails> userSessionDetailsEventLogEnricher;
+        private readonly IEnricher<UserSessionDetails> userSessionExternalIpEnricher;
         private readonly IServiceConfigMessage serviceConfigMessage;
         private readonly ITracingRender tracingRender;
-        private readonly ISleepProvider sleepProvider; //FakeSleepProvider();//  
+        private readonly ISleepProvider sleepProvider; 
         private readonly ITelegramButtons telegramButtons;
         private readonly ITelegramSimpleMessage telegramSimpleMessage;
         private readonly ITracing tracing;
+        private readonly ICheckSessionAndRunBlockerWraper checkSessionAndRunBlockerWraper;
         private Timer timerCheckResponse;
         private Timer timerConfigAndCommand;
 
@@ -67,12 +71,15 @@ namespace ServiceLogonMultifactor
             sleepProvider = new SleepProvider();
             iqUserLookup = new QueryUserLookup(executeCommandWrapper, tracing);
             userSessionEventLogEnricher = new UserSessionEventLogEnricher(tracing);
-            winApiProvider = new WinApiProvider();
+            winApiProvider = new WinApiTsProvider();
             userSessionDetailsEnricher = new UserSessionDetailsEnricher(tracing, winApiProvider);
+            userSessionDetailsEventLogEnricher = new UserSessionEventLogEnricher(tracing);
+            userSessionExternalIpEnricher = new UserSessionExternalIpEnricher(tracing);
             systemInfoLookup = new SystemInfoLookup(tracing, executeCommandWrapper);
-            
+
+            checkSessionAndRunBlockerWraper = new CheckSessionAndRunBlockerWraper(tracing);
             requestsProcessor = new ButtonsRequestsReader(usersIpConfigManager,tracing, executeCommandWrapper, telegramSimpleMessage, telegramTexts,
-                telegramGetUpdates, systemInfoLookup);
+                telegramGetUpdates, systemInfoLookup, checkSessionAndRunBlockerWraper);
             tracingRender = new TracingRender(tracing);
             answerOnMonitoringRequest = new MonitoringRequestsReader(tracing, telegramGetUpdates, telegramSimpleMessage,
                 executeCommandWrapper, systemInfoLookup, tracingRender);
@@ -148,16 +155,34 @@ namespace ServiceLogonMultifactor
                     {
                         eventNumber++;
                         var userSession = new UserSessionDetails();
-
+                       
                         userSession = iqUserLookup.Query(desc.SessionId);
-                        if (userSession.UserQuser !=
-                            "-") //if there is no user from quser - it is a phantom that appears before the normal logon. 
+                    //if there is no user from quser - it is a phantom that appears before the normal logon, and check the session ID is not curently processed
+                        if (userSession.UserQuser !="-" && !listProcessingSessions.Contains(desc.SessionId)) 
                         {
+                            listProcessingSessions.Add(desc.SessionId);
+                            
                             userSession.SessionID = desc.SessionId;
                             userSession.SesionChangeReason = desc.Reason.ToString();
                             userSession.EventLogTxt = "";
                             userSession = userSessionDetailsEnricher.Enrich(userSession);
-
+                            //if no IP and not console ->rdg will search in the eventlog
+                            int whileCount = 0;
+                            while (userSession.IP.Substring(0, 4) == "0.0." && whileCount <10)
+                            { // dellay for event log only if new connection and could be around 1 second (fast pc)
+                                tracing.WriteFull($"quering event log-{whileCount} after waiting");
+                                sleepProvider.Sleep(200);
+                                userSession = userSessionDetailsEventLogEnricher.Enrich(userSession);
+                                whileCount++;
+                            }
+                            tracing.WriteFull($"IP after event log ={userSession.IP}");
+                           
+                            //check if ip in the list of RdgVpnServersList and if yes send tcp request to have remote IP
+                            if (this.GetAppConfig().RdgVpnServersList.Contains(userSession.IP)) //connection from RDG for vpn should be chect to see if in the range
+                            {
+                                tracing.WriteFull("quering RDG server");
+                                userSessionExternalIpEnricher.Enrich(userSession);
+                            }
                             //on this string, we will look for the answer in Telegram 
                             var idRequest = DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + Environment.MachineName +
                                             "_" + userSession.SessionID;
@@ -185,9 +210,11 @@ namespace ServiceLogonMultifactor
                                 userSessionData = userSessionEnricher.Enrich(userSessionData);
                                 ListRequest.Add(
                                     userSessionData); //we have added a request to the list and now we will check by timer if there is a response to this request
+                                checkSessionAndRunBlockerWraper.ChecAndBlock(userSessionData);
                                 telegramButtons.SendButtons(userSessionData);
                                 tracing.WriteFull(tracingRender.RenderUserSessionData(userSessionData, eventNumber));
                             }
+                            listProcessingSessions.Remove(desc.SessionId); 
                         }
                         else
                         {

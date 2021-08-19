@@ -68,6 +68,7 @@
     <Compile Include="AnswerOnMonitoringRequestTest.cs" />
     <Compile Include="CurrentUserSettingsFillerTests.cs" />
     <Compile Include="GetTaskListResultTest.cs" />
+    <Compile Include="Providers\FileTrastChekingProviderTests.cs" />
     <Compile Include="SearchedQuserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchedQuserTestsMoq.cs" />

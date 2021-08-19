@@ -15,6 +15,12 @@ namespace ServiceLogonMultifactor.Configs.ApplicationConfig
         [XmlAttribute(AttributeName = "chatId")]
         public string ChatId { get; set; } = "";
 
+        [XmlAttribute(AttributeName = "RdgVpnServersList")]
+        public string RdgVpnServersList { get; set; } = "";
+        
+        [XmlAttribute(AttributeName = "RdgVpnServersTimeoutMs")]
+        public int RdgVpnServersTimeoutMs { get; set; } = 4000;
+
         [XmlAttribute(AttributeName = "DetailInfoOnServiceStart")]
         public bool DetailInfoOnServiceStart { get; set; } = true;
 
