@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceLogonMultifactor.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleReadTelegramBot", "ConsoleReadTelegramBot\ConsoleReadTelegramBot.csproj", "{24216873-5F0C-4582-B794-E80DD1553E5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "formBlockAccess", "..\ServiceLogonMultifactor\formBlockAccess\formBlockAccess.csproj", "{A7B2BABC-64AC-4757-AB4D-D5FC632E6B84}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "formBlockAccess", "formBlockAccess\formBlockAccess.csproj", "{A7B2BABC-64AC-4757-AB4D-D5FC632E6B84}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
