@@ -3,7 +3,7 @@ using ServiceLogonMultifactor.Models.UserSessionModel;
 
 namespace ServiceLogonMultifactor.Providers
 {
-    public interface IWinApiProvider
+    public interface IWinApiTsProvider
     {
         IEnumerable<LogonSession> GetSessions();
     }

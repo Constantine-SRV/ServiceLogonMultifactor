@@ -69,9 +69,11 @@
     <Compile Include="Configs\Services\UsersIpConfigManager.cs" />
     <Compile Include="Enrichers\IEnricher.cs" />
     <Compile Include="Enrichers\IUserSessionEventLogEnricher.cs" />
+    <Compile Include="Enrichers\IUserSessionExternalIpEnricher.cs" />
     <Compile Include="Enrichers\UserSessionDetailsEnricher.cs" />
     <Compile Include="Enrichers\UserSessionEnricher.cs" />
     <Compile Include="Enrichers\UserSessionEventLogEnricher.cs" />
+    <Compile Include="Enrichers\UserSessionExternalIpEnricher.cs" />
     <Compile Include="Logging\Collectors\ErrorsCollector.cs" />
     <Compile Include="Logging\Collectors\IErrorsCollector.cs" />
     <Compile Include="Logging\Infrastructure\IOldLogsCleaner.cs" />
@@ -143,19 +145,25 @@
     <Compile Include="Providers\DateTimeProvider.cs" />
     <Compile Include="Providers\DnsHostProvider.cs" />
     <Compile Include="Providers\FileSystemProvider.cs" />
+    <Compile Include="Providers\FileTrastChekingProvider.cs" />
     <Compile Include="Providers\HttpProvider.cs" />
     <Compile Include="Providers\IDateTimeProvider.cs" />
     <Compile Include="Providers\IDnsHostProvider.cs" />
     <Compile Include="Providers\IFileSystemProvider.cs" />
+    <Compile Include="Providers\IFileTrastChekingProvider.cs" />
     <Compile Include="Providers\IHttpProvider.cs" />
     <Compile Include="Providers\ISleepProvider.cs" />
-    <Compile Include="Providers\IWinApiProvider.cs" />
+    <Compile Include="Providers\IWinApiTsProvider.cs" />
+    <Compile Include="Providers\IWinApiUserAppRunProvider.cs" />
     <Compile Include="Providers\SleepProvider.cs" />
     <Compile Include="Providers\TimedWebClientProxy.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Providers\WinApiProvider.cs" />
+    <Compile Include="Providers\WinApiTsProvider.cs" />
+    <Compile Include="Providers\WinApiUserAppRunProvider.cs" />
+    <Compile Include="Wrappers\CheckSessionAndRunBlockerWraper.cs" />
     <Compile Include="Wrappers\ExecuteCommandWrapper.cs" />
+    <Compile Include="Wrappers\ICheckSessionAndRunBlockerWraper.cs" />
     <Compile Include="Wrappers\IExecuteCommandWrapper.cs" />
   </ItemGroup>
   <ItemGroup>

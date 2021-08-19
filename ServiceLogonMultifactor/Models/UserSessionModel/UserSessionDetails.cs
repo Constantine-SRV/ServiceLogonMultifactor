@@ -14,5 +14,7 @@
         public string EventLogTxt { get; set; }
         public string QuserTxt { get; set; }
         public string SesionChangeReason { get; set; }
+        public string ExternalIP { get; set; }
+        public string ExternalIPDetails { get; set; }
     }
 }

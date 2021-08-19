@@ -5,7 +5,7 @@ using ServiceLogonMultifactor.Models.UserSessionModel;
 
 namespace ServiceLogonMultifactor.Providers
 {
-    public class WinApiProvider : IWinApiProvider
+    public class WinApiTsProvider : IWinApiTsProvider
     {
         //https://www.codeproject.com/Articles/111430/Grabbing-Information-of-a-Terminal-Services-Sessio
 

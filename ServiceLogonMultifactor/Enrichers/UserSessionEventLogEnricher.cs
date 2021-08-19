@@ -28,8 +28,8 @@ namespace ServiceLogonMultifactor.Enrichers
                 //[(EventID=21 or EventID=25)]]</
                 // string query = $"*[System/EventID={eventId}] and *[UserData/EventXML/SessionID = {userSession.sessionID.ToString()}]";
 
-                var startTime = dt.AddMinutes(-10).ToUniversalTime().ToString("o");
-                var endTime = dt.AddMinutes(10).ToUniversalTime().ToString("o");
+                var startTime = dt.AddMinutes(-5).ToUniversalTime().ToString("o");
+                //var endTime = dt.AddMinutes(10).ToUniversalTime().ToString("o");
                 var query =
                     $"(*[System/EventID=25] or *[System/EventID=21]) and *[System[TimeCreated[@SystemTime >= '{startTime}']]]"
                     //  + $" and *[System[TimeCreated[@SystemTime <= '{endTime}']]]"

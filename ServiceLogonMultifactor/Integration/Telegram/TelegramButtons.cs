@@ -77,6 +77,8 @@ namespace ServiceLogonMultifactor.Integration.Telegram
                            $"the source {userSession.IP} is in \'Not disconnect\' list";
                 else
                     text = telegramTexts.TextForSend("New Connection", userSession);
+                if (userSession.ExternalIP.Length > 1)
+                    text += Environment.NewLine +"external ip: "+ userSession.ExternalIP;
             }
             catch (Exception e)
             {

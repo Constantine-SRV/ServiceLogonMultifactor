@@ -8,6 +8,7 @@
   LastConfigRead="2021-05-26T10:47:10.2301205+03:00"
   botId="1770458844:AAEveFhBHS0nxjsYlhZX2NQpNmWqVbdhzsQ"
   chatId="1638765616"
+  RdgVpnServersList="192.168.0.41"
   daysOldDeliteLogs="0"
   waitForAnswerSec="20"
   sendMessageBeforeDisconnectSec="15"

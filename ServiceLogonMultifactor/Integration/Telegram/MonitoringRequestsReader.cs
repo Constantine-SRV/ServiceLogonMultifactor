@@ -45,8 +45,7 @@ namespace ServiceLogonMultifactor.Integration.Telegram
             long updateIdToClear = 0;
             var result = "error";
             if (this.GetAppConfig().SingleServiceOnTheBot)
-                result = telegramGetUpdates
-                    .GetUpdates(); //maxRequestProcessed+1); //delete requests < maxRequestProcessed
+                result = telegramGetUpdates.GetUpdates(); //maxRequestProcessed+1); //delete requests < maxRequestProcessed
             else
                 result = telegramGetUpdates.GetUpdates();
             if (result == "error") return;
@@ -65,7 +64,12 @@ namespace ServiceLogonMultifactor.Integration.Telegram
                         var dateUnix = r.message.date;
                         var dt = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
                         dt = dt.AddSeconds(dateUnix).ToLocalTime();
-                        if (dt < minimumDtClearRequests) updateIdToClear = r.update_id;
+                        if (dt < minimumDtClearRequests)
+                        {
+
+                            updateIdToClear = r.update_id;
+                            tracing.WriteFull($"clear update {updateIdToClear + 1} dt:{dt.ToString():HH:mm:ss:f} {r.message.text}");
+                        }
                         tracing.WriteFull($"processing from {chatId} update:{r.update_id} text {textMessage}");
                         if (r.update_id > maxRequestProcessed) 
                         {
@@ -93,7 +97,11 @@ namespace ServiceLogonMultifactor.Integration.Telegram
                         }
                     }
 
-                if (updateIdToClear > 0) telegramGetUpdates.GetUpdates(updateIdToClear + 1);
+                if (updateIdToClear > 0)
+                {
+                    tracing.WriteFull($"clear update {updateIdToClear + 1}");
+                    telegramGetUpdates.GetUpdates(updateIdToClear + 1);
+                }
             }
         }
     }

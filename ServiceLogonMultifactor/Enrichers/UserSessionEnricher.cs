@@ -44,7 +44,8 @@ namespace ServiceLogonMultifactor.Enrichers
                                 .NotDisconnectIP; //if null will use system if empty it is mean no IP permited
                 }
             }
-
+            var fromIpOrConsole = userSessionData.UserSessionDetails.IsConsole ? "console" : userSessionData.UserSessionDetails.IP;
+            userSessionData.ShouldBeBlocked = !(notDisconnectIP.IndexOf(fromIpOrConsole, StringComparison.CurrentCultureIgnoreCase) >= 0);
             var userConfig = new UserConfig
             {
                 ChatId = chatId,

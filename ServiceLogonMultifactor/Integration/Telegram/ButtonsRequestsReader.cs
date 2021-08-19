@@ -16,7 +16,8 @@ namespace ServiceLogonMultifactor.Integration.Telegram
         private readonly ITelegramTexts telegramTexts;
         private readonly IUsersIpConfigManager usersIpConfigManager;
         private readonly ITracing tracing;
-       
+        private readonly ICheckSessionAndRunBlockerWraper checkSessionAndRunBlockerWraper;
+
         public ButtonsRequestsReader(
             IUsersIpConfigManager usersIpConfigManager,
             ITracing tracing, 
@@ -24,7 +25,8 @@ namespace ServiceLogonMultifactor.Integration.Telegram
             ITelegramSimpleMessage telegramSimpleMessage,
             ITelegramTexts telegramTexts, 
             ITelegramGetUpdates telegramGetUpdates, 
-            ISystemInfoLookup systemInfoLookup)
+            ISystemInfoLookup systemInfoLookup,
+            ICheckSessionAndRunBlockerWraper checkSessionAndRunBlockerWraper)
         {
             this.usersIpConfigManager = usersIpConfigManager;
             this.tracing = tracing;
@@ -33,7 +35,7 @@ namespace ServiceLogonMultifactor.Integration.Telegram
             this.telegramTexts = telegramTexts;
             this.telegramGetUpdates = telegramGetUpdates;
             this.systemInfoLookup = systemInfoLookup;
-          
+            this.checkSessionAndRunBlockerWraper = checkSessionAndRunBlockerWraper;
             requestProcessorCommand =
                 new ButtonsRequestsProcessor(tracing, executeCommandWrapper, telegramSimpleMessage, telegramTexts, systemInfoLookup);
         }
@@ -65,10 +67,13 @@ namespace ServiceLogonMultifactor.Integration.Telegram
                         notDisconnectIP.IndexOf(fromIpOrConsole, StringComparison.CurrentCultureIgnoreCase) >= 0;
                     tracing.WriteFull($"waiting  {(DateTime.Now - request.SessionCreatedTimeStamp).TotalSeconds} msg " +
                                       $"{waitForAnswerSec - sendMessageBeforeDisconnectSec} disconnect {disconnectIfNoAnswer} in the list{sourceInTheList}");
+                    //checkSessionAndRunBlockerWraper.ChecAndBlock(request); //dont know should be it called every sec or only one time with message 
+
                     if ((DateTime.Now - request.SessionCreatedTimeStamp).TotalSeconds >
-                        waitForAnswerSec - sendMessageBeforeDisconnectSec && !sourceInTheList)
+                        waitForAnswerSec - sendMessageBeforeDisconnectSec && !sourceInTheList && request.ShouldBeMessaged)
                     {
-                        //send messade
+                        //send messade or block input
+                      
                         var cmdres1 = executeCommandWrapper.ExecuteAndCollectOutput("msg",
                             $"{request.UserSessionDetails.SessionID} /time:1 Multifactor token was not received. " +
                             $"You session will be disconnect in {secToDisconnect} sec ");
@@ -94,9 +99,11 @@ namespace ServiceLogonMultifactor.Integration.Telegram
                                 requestProcessorCommand.Disconnect(request);
                                 break;
                             case "E":
+                                checkSessionAndRunBlockerWraper.RemoveBlocker(request);
                                 requestProcessorCommand.Enable(request);
                                 break;
                             case "A": // enable and  add ip
+                                checkSessionAndRunBlockerWraper.RemoveBlocker(request);
                                 usersIpConfigManager.InsertIp(fromIpOrConsole, request);
                                 requestProcessorCommand.Enable(request);
 

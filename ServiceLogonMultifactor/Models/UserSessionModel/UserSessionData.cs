@@ -12,5 +12,8 @@ namespace ServiceLogonMultifactor.Models.UserSessionModel
         public UserConfig UserConfigInTheFile { get; set; }
         public UserSessionDetails UserSessionDetails { get; set; }
         public int UserIndexInSettings { get; set; }
+        public bool ShouldBeBlocked { get; set; } = true;
+        public bool ShouldBeMessaged { get; set; } = true;
+        public UInt32 InputBlockerProcessId { get; set; } = 0;
     }
 }
